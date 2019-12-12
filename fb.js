@@ -1,9 +1,6 @@
 function switchToHrono() {
-//	window.setTimeout(
-//		function(){
-			
-			//some time tracking
-			var start_time = Date.now();
+	window.setTimeout(
+		function(){
 			
 		// Change links to point recent news feed.
 			if (window.location.href == "https://www.facebook.com/" ||
@@ -31,11 +28,11 @@ function switchToHrono() {
 			
 		// Change links to strip facebook tracking
 			count = 0;
-			var ahref = document.querySelectorAll('a[href*=fbclid]');
+			var ahref = document.getElementsByTagName('a');
 			// console.log('number of a links: ' + ahref.length);
 			for(var i = 0; i < ahref.length; i++){
 				var href = ahref[i].getAttribute('href');
-				if (href.length > 32 ){
+				if (href !== null){
 					//console.log('evb original fb url: ' + href);
 					if (href.indexOf('https://l.facebook.com/l.php?u=') !== -1){
 							href = href.replace('https://l.facebook.com/l.php?u=','');
@@ -65,14 +62,10 @@ function switchToHrono() {
 			var par = null;
 			var feed = null;
 			var adds = [];
-			var selector = 'span > a > i.q_1fo12d-q8g';
-			//selector += ', div._44af > div._275- > a._42ft[role=button]';
-			selector += ', div > iframe';
-			//selector += ', span.fsm > span > a[role=button] > b.q_1fo12d-q8g > b.q_1fo12d-q8g > b.q_1fo12d-q8g';
-			selector += ', div.x_1fo12d-fii > div.i_1fo12d-nuz > div._6a > a.x_1fo12d-mtm';
-			//selector += ', div.clearfix > div._-ix._ohf > div._6a > a._42ft[role=button]';
-			selector += ', a._42ft._4jy0._517h._51sy:not(._55pi):not(._522u)[role=button]';
-			adds = document.querySelectorAll(selector);
+			adds = document.querySelectorAll('span > a > i.q_1fo12d-q8g, div._44af > div._275- > a._42ft[role=button], div > iframe');
+			// var adds_new = document.querySelectorAll('div._44af > div._275- > a._42ft[role=button]');
+			//adds.push.apply(adds, adds_old);
+			//adds.push.apply(adds, adds_new);
 			count = 0;
 			
 			for(var j = 0; j < adds.length; j++){
@@ -81,15 +74,11 @@ function switchToHrono() {
 					feed = true;
 					do {
 						if(par.id.indexOf('hyperfeed_story_id') !== -1){
-							// par.style = "display: none;";
-							var add_title = par.querySelector('h5 > span > span > a');
-							if(add_title!==null){
-								par.innerHTML = 'EVB: HIDDEN_ADD ( from: ' + add_title.outerHTML + ')' ;
-								adds[j].id = 'evb_add' + j;
-								count += 1;
-							}
+							//par.style = "display: none;";
+							par.innerHTML = "EVB_BEEP ADS";
+							adds[j].id = 'evb_add' + j;
+							count += 1;
 							feed = false;
-							
 						} else{
 							par = par.parentElement;
 						}
@@ -97,7 +86,7 @@ function switchToHrono() {
 					
 				}
 			}
-			if(count > 0) console.log('EVB Hidden Post Adds: ' + count);
+			if(count > 0) console.log('EVB Hidden Adds: ' + count);
 			
 			// Hide side adds
 			adds = document.querySelectorAll('div > a[rel="nofollow"]');
@@ -111,8 +100,7 @@ function switchToHrono() {
 					feed = true;
 					do {
 						if(par.id.indexOf('pagelet_ego_pane') !== -1){
-							// par.style = "display: none;";
-							par.innerHTML = 'EVB: HIDDEN_ADD';
+							par.style = "display: none;";
 							adds[j].id = 'evb_add' + j;
 							count += 1;
 							feed = false;
@@ -123,17 +111,14 @@ function switchToHrono() {
 					
 				}
 			}
-			if(count > 0) console.log('EVB Hidden Side Adds: ' + count);
-			
-			var end_time = ( Date.now() - start_time ) / 1000;
-			if( end_time > 1 ) 
-				console.log('EVB: Time elpased(seconds): ' + end_time );
+			if(count > 0) console.log('EVB Hidden Adds: ' + count);
+		
 		// end function
 		
 			//switchToHrono();
-//		}, 500);
+		}, 500);
 }
 
 document.getElementById("globalContainer").addEventListener("wheel", switchToHrono);
 
-window.setTimeout(switchToHrono, 500);
+window.setTimeout(switchToHrono(), 500);

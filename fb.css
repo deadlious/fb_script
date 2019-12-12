@@ -1,4 +1,4 @@
-#blueBarNAXAnchor, #pagelet_bluebar {
+blueBarNAXAnchor, #pagelet_bluebar {
     background-color: #3E3E3E;
     background-image: none;
     border-bottom: 1px solid black;
@@ -41,16 +41,17 @@ body, #contentCol {
     background-color: #e0e0e0;
 }
 
-/*
+
 #contentArea {
-    margin-left: -50px;
-    min-width: 800px;
+	float: left !important;
+	width: 800px !important; 
+	left: 0px !important; 
 }
 
 #leftCol {
     border-right: 1px solid rgba(0,0,0,0.24);
     box-sizing: border-box;
-    left: 0; 
+    left: 5px; 
     min-height: 100%;
      padding-left: 20px;
     padding-right: 20px;
@@ -65,19 +66,20 @@ body, #contentCol {
 #rightCol {
     display: none;
 }
-*/
 
-/* #pagelet_composer {
-    display: none;
-} */
 
-/*
+ #pagelet_composer {
+    display: inline-block;
+    position: static;
+    min-width: 800px;
+    } 
+
+
 html ._5vb_.hasLeftCol #contentCol {
     padding-right: 12px
 ;
 }
 
-*/
 
 div._2t-a._50tj {
     background-color: #3E3E3E;
