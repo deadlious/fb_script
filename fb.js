@@ -223,7 +223,7 @@ function switchToHrono() {
 
 
 // Set scrolling event to the global Container
-document.getElementById("mount_0_0").addEventListener("wheel", redirect_plus);
+document.getElementsByTagName("body")[0].addEventListener("wheel", redirect_plus);
 
 // Run once, once loaded
 window.setTimeout(redirect_plus, 500);
