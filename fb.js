@@ -169,7 +169,12 @@ function switchToHrono() {
 					var add_title = par.querySelector('h4');
 					if(add_title!==null){
 						let div_arr = par.querySelectorAll('div[id^=jsc_c')
-						div_arr.forEach(function(f){f.style.display = "none";});
+						div_arr.forEach(function(f){
+							f.style.display = "none";
+							b = document.createElement('BUTTON');
+							b.innerHTML = 'Show Post';
+							b.setAttribute('onclick', 'show_parent(this)');
+							f.parentElement.appendChild(b)});
 						adds[j].id = 'evb_add' + j;
 						count += 1;
 					}
@@ -221,9 +226,19 @@ function switchToHrono() {
 	if(count > 0) console.log('EVB paused watch parties: ' + count);
 }
 
+let head = document.getElementsByTagName('head')[0];
+let sc = document.getElementById('evb_script');
+if (!sc){
+	sc = document.createElement('SCRIPT');
+	sc.setAttribute('id', 'evb_script');
+	sc.innerHTML = "function show_parent(but){ let arr = but.parentElement.querySelectorAll('div[id^=jsc_c'); arr.forEach(function(f){f.style.display = 'block'; }); but.style.display = 'none';}";
+	head.appendChild(sc);
+}
 
 // Set scrolling event to the global Container
 document.getElementsByTagName("body")[0].addEventListener("wheel", redirect_plus);
+document.getElementsByTagName("body")[0].addEventListener("scroll", redirect_plus);
+document.getElementsByTagName("body")[0].addEventListener("touchmove", redirect_plus);
 
 // Run once, once loaded
 window.setTimeout(redirect_plus, 500);
