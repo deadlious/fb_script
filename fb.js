@@ -24,7 +24,7 @@ function sort_groups(){
 		}
 	}
 	if(count > 0) console.log("EVB replaced group links: " + count);
-}
+};
 
 function remove_listeners(elem){
 	elem.addEventListener("mousedown", function (event) { event.stopPropagation();}, true);
@@ -98,9 +98,63 @@ function redirect_plus(){
 	if(count > 0) console.log("EVB replaced noob links: " + count);
 	
 	switchToHrono();
-}
+};
 
-
+function hide_post_ads(){
+	// Hide post adds
+	var par = null;
+	var feed = null;
+	var adds = [];
+	let selector = '';
+	// var selector = 'span > a > i.q_1fo12d-q8g';
+	// selector += ', div._44af > div._275- > a._42ft[role=button]';
+	// selector += ', div > iframe';
+	//selector += ', span.fsm > span > a[role=button] > b.q_1fo12d-q8g > b.q_1fo12d-q8g > b.q_1fo12d-q8g';
+	// selector += 'div.x_1fo12d-fii > div.i_1fo12d-nuz > div._6a > a.x_1fo12d-mtm';
+	//selector += ', div.clearfix > div._-ix._ohf > div._6a > a._42ft[role=button]';
+	// selector += ', a._42ft._4jy0._517h._51sy:not(._55pi):not(._522u)[role=button]';
+	// selector += ', div.buofh1pr > div.j83agx80 > div.qzhwtbm6 > span.oi732d6d > span > div.oajrlxb2[role="button"]';
+	// selector += ', span > span > a.oajrlxb2[role="link"]';
+	// selector += ', span > span > div.oajrlxb2[role="button"]';
+	
+	// selector += 'span.b6zbclly:not([style])'; // span[id^=jsc_c] > a';
+	selector += 'span.a57itxjd';
+	selector += ', a[aria-label=Sponsored]'
+	adds = document.querySelectorAll(selector);
+	let count = 0;
+	
+	for(var j = 0; j < adds.length; j++){
+		if(adds[j].id !== null && adds[j].id.slice(0,3) !== 'evb'){
+			par = adds[j].parentElement;
+			feed = true;
+			if( adds[j].innerHTML[0] != 'S') continue;
+			do {
+				dp = '' + par.dataset.pagelet;
+				if( dp.indexOf("FeedUnit") !== -1){ //par.id.indexOf('hyperfeed_story_id') !== -1 ||
+					// par.style = "display: none;";
+					var add_title = par.querySelector('h4');
+					if(add_title!==null){
+						let div_arr = par.querySelectorAll('div[id^=jsc_c')
+						div_arr.forEach(function(f){
+							f.style.display = "none";
+							b = document.createElement('BUTTON');
+							b.innerHTML = 'Show Post';
+							b.setAttribute('onclick', 'show_parent(this)');
+							f.parentElement.appendChild(b)});
+						adds[j].id = 'evb_add' + j;
+						count += 1;
+					}
+					feed = false;
+					
+				} else{
+					par = par.parentElement;
+				}
+			} while (feed && par !== null);
+			
+		}
+	}
+	if(count > 0) console.log('EVB Hidden Post Adds: ' + count);
+};
 
 function switchToHrono() {
 // Change links to strip facebook tracking
@@ -138,56 +192,7 @@ function switchToHrono() {
 	
 	sort_groups();
 	
-// Hide post adds
-	var par = null;
-	var feed = null;
-	var adds = [];
-	let selector = '';
-	// var selector = 'span > a > i.q_1fo12d-q8g';
-	// selector += ', div._44af > div._275- > a._42ft[role=button]';
-	// selector += ', div > iframe';
-	//selector += ', span.fsm > span > a[role=button] > b.q_1fo12d-q8g > b.q_1fo12d-q8g > b.q_1fo12d-q8g';
-	// selector += 'div.x_1fo12d-fii > div.i_1fo12d-nuz > div._6a > a.x_1fo12d-mtm';
-	//selector += ', div.clearfix > div._-ix._ohf > div._6a > a._42ft[role=button]';
-	// selector += ', a._42ft._4jy0._517h._51sy:not(._55pi):not(._522u)[role=button]';
-	// selector += ', div.buofh1pr > div.j83agx80 > div.qzhwtbm6 > span.oi732d6d > span > div.oajrlxb2[role="button"]';
-	// selector += ', span > span > a.oajrlxb2[role="link"]';
-	// selector += ', span > span > div.oajrlxb2[role="button"]';
-	selector += 'span.b6zbclly:not([style])'; // span[id^=jsc_c] > a';
-	adds = document.querySelectorAll(selector);
-	count = 0;
-	
-	for(var j = 0; j < adds.length; j++){
-		if(adds[j].id !== null && adds[j].id.slice(0,3) !== 'evb'){
-			par = adds[j].parentElement;
-			feed = true;
-			if( adds[j].innerHTML[0] != 'S') continue;
-			do {
-				dp = '' + par.dataset.pagelet;
-				if( dp.indexOf("FeedUnit") !== -1){ //par.id.indexOf('hyperfeed_story_id') !== -1 ||
-					// par.style = "display: none;";
-					var add_title = par.querySelector('h4');
-					if(add_title!==null){
-						let div_arr = par.querySelectorAll('div[id^=jsc_c')
-						div_arr.forEach(function(f){
-							f.style.display = "none";
-							b = document.createElement('BUTTON');
-							b.innerHTML = 'Show Post';
-							b.setAttribute('onclick', 'show_parent(this)');
-							f.parentElement.appendChild(b)});
-						adds[j].id = 'evb_add' + j;
-						count += 1;
-					}
-					feed = false;
-					
-				} else{
-					par = par.parentElement;
-				}
-			} while (feed && par !== null);
-			
-		}
-	}
-	if(count > 0) console.log('EVB Hidden Post Adds: ' + count);
+	hide_post_ads();
 	
 	// Hide side adds
 	adds = document.querySelectorAll('div > a[rel="nofollow"]');
@@ -224,7 +229,7 @@ function switchToHrono() {
 		}
 	}
 	if(count > 0) console.log('EVB paused watch parties: ' + count);
-}
+};
 
 let head = document.getElementsByTagName('head')[0];
 let sc = document.getElementById('evb_script');
@@ -242,3 +247,4 @@ document.getElementsByTagName("body")[0].addEventListener("touchmove", redirect_
 
 // Run once, once loaded
 window.setTimeout(redirect_plus, 500);
+
