@@ -106,28 +106,15 @@ function hide_post_ads(){
 	var feed = null;
 	var adds = [];
 	let selector = '';
-	// var selector = 'span > a > i.q_1fo12d-q8g';
-	// selector += ', div._44af > div._275- > a._42ft[role=button]';
-	// selector += ', div > iframe';
-	//selector += ', span.fsm > span > a[role=button] > b.q_1fo12d-q8g > b.q_1fo12d-q8g > b.q_1fo12d-q8g';
-	// selector += 'div.x_1fo12d-fii > div.i_1fo12d-nuz > div._6a > a.x_1fo12d-mtm';
-	//selector += ', div.clearfix > div._-ix._ohf > div._6a > a._42ft[role=button]';
-	// selector += ', a._42ft._4jy0._517h._51sy:not(._55pi):not(._522u)[role=button]';
-	// selector += ', div.buofh1pr > div.j83agx80 > div.qzhwtbm6 > span.oi732d6d > span > div.oajrlxb2[role="button"]';
-	// selector += ', span > span > a.oajrlxb2[role="link"]';
-	// selector += ', span > span > div.oajrlxb2[role="button"]';
-	
-	// selector += 'span.b6zbclly:not([style])'; // span[id^=jsc_c] > a';
-	selector += 'span.a57itxjd';
-	selector += ', a[aria-label=Sponsored]'
-	adds = document.querySelectorAll(selector);
 	let count = 0;
+	selector += 'a.oajrlxb2[role="link"][href^="#"] > span > span[aria-labelledby^="jsc_c"] > span.t5a262vz';
+	adds = document.querySelectorAll(selector);
 	
 	for(var j = 0; j < adds.length; j++){
 		if(adds[j].id !== null && adds[j].id.slice(0,3) !== 'evb'){
 			par = adds[j].parentElement;
 			feed = true;
-			if( adds[j].innerHTML[0] != 'S') continue;
+			if( !adds[j].innerText.startsWith('S')) continue;
 			do {
 				dp = '' + par.dataset.pagelet;
 				if( dp.indexOf("FeedUnit") !== -1){ //par.id.indexOf('hyperfeed_story_id') !== -1 ||
