@@ -1,32 +1,33 @@
-function sort_groups(){
-	// Switch to chronological order the posts in groups.
-	let count = 0;
-	let gr_links = document.querySelectorAll('a[href^="https://www.facebook.com/groups"],' + 'a[href^="/groups/"]');
-	for(var i=0; i<gr_links.length; i++){
-		
-		cls = gr_links[i].getAttribute("class");
-		if(cls.indexOf("evb") < 0){
-			gr_links[i].setAttribute("class", cls + " evb");
-			remove_listeners(gr_links[i]);
-		}
-		
-		let gr_href = gr_links[i].getAttribute('href');
-		if (gr_href.indexOf('permalink') < 0 && gr_href.indexOf('CHRONOLOGICAL') < 0){
-			let q = gr_href.indexOf('?');
-			q = q==-1?q:q-1;
-			if(q > 0){
-				gr_href += '&sorting_setting=CHRONOLOGICAL';
-			}else{
-				gr_href += '?sorting_setting=CHRONOLOGICAL';
-			}
-			gr_links[i].setAttribute('href', gr_href);
-			count += 1;
-		}
-	}
-	if(count > 0) console.log("EVB replaced group links: " + count);
-};
+function sortGroups() {
+	// By chat GPT
+  let count = 0;
+  const grLinks = document.querySelectorAll('a[href^="https://www.facebook.com/groups"], a[href^="/groups/"]');
 
-function remove_listeners(elem){
+  for (let i = 0; i < grLinks.length; i++) {
+    const link = grLinks[i];
+    const cls = link.getAttribute("class");
+
+    if (cls && cls.indexOf("scd") === -1) {
+      link.classList.add("scd");
+      removeListeners(link);
+    }
+
+    const grHref = link.getAttribute('href');
+    if (grHref && grHref.indexOf('permalink') === -1 && grHref.indexOf('CHRONOLOGICAL') === -1) {
+      const qIndex = grHref.indexOf('?');
+      const separator = qIndex === -1 ? '?' : '&';
+
+      link.setAttribute('href', `${grHref}${separator}sorting_setting=CHRONOLOGICAL`);
+      count++;
+    }
+  }
+
+  if (count > 0) {
+    console.log(`scd replaced group links: ${count}`);
+  }
+}
+
+function removeListeners(elem){
 	elem.addEventListener("mousedown", function (event) { event.stopPropagation();}, true);
 	elem.addEventListener("mouseup", function (event) { event.stopPropagation();}, true);
 	elem.addEventListener("click", function (event) { event.stopPropagation();}, true);
@@ -50,188 +51,194 @@ function remove_listeners(elem){
 	elem.addEventListener("DOMContentLoaded", function (event) { event.stopPropagation();}, true);
 }
 
-function redirect_plus(){
-// Redirect to "Recent Posts" view of news feed
-	let wl_href = window.location.href;
-	let count = 0;
-	
-	if (wl_href == "https://www.facebook.com/" ||
-		// window.location.href == "https://www.facebook.com/?sk=h_nor" ||
-		wl_href == "https://www.facebook.com/?ref=tn_tnmn" ||
-		wl_href == "https://www.facebook.com/?ref=logo") {
-	   window.location.href = 'https://www.facebook.com/?sk=h_chr'; 
-	}
-	let top_posts = document.querySelectorAll('div.g5gj957u > a[aria-label="Back to Top Posts"]')[0]
-	if(top_posts){
-		top_posts.setAttribute("href", "https://www.facebook.com/?sk=h_nor");
-		let cls = top_posts.getAttribute("class");
-		if(cls.indexOf("evb") < 0){
-			top_posts.setAttribute("class", cls + " evb");
-			remove_listeners(top_posts);
-		}
-	}
+function redirectPlus() {
+	// by chat GPT
+  const wlHref = window.location.href;
+  let count = 0;
 
-	sort_groups();
-	
-// Change links to point recent news feed.
-	count = 0;
-	var links = document.querySelectorAll(
-		'a[href^="https://www.facebook.com/?ref="], ' +
-		'a[href="https://www.facebook.com/"], ' +
-		'a[href^="/?sk="], ' + 'a[href="/"] ' 
-		// + ', a[href^="https://www.facebook.com/?sk="] '
-		);
-	for (var a = 0; a<links.length; a++){
-		
-		cls = links[a].getAttribute("class");
-		if(cls.indexOf("evb") < 0){
-			links[a].setAttribute("class", cls + " evb");
-			remove_listeners(links[a]);
-		}
-		
-		if (links[a] && 
-			links[a].getAttribute('href') !== 'https://www.facebook.com/?sk=h_chr' ) {
-			links[a].setAttribute('href', 'https://www.facebook.com/?sk=h_chr');
-			count +=1;
-		} 
-	}
-	if(count > 0) console.log("EVB replaced noob links: " + count);
-	
-	switchToHrono();
-};
+  const topLevelURLs = [
+    "https://www.facebook.com/",
+    "https://www.facebook.com/?ref=tn_tnmn",
+    "https://www.facebook.com/?ref=logo"
+  ];
 
-function hide_post_ads(){
-	// Hide post adds
-	var par = null;
-	var feed = null;
-	var adds = [];
-	let selector = '';
-	let count = 0;
-	selector += 'a.oajrlxb2[role="link"][href^="#"] > span > span[aria-labelledby^="jsc_c"] > span.t5a262vz';
-	adds = document.querySelectorAll(selector);
-	
-	for(var j = 0; j < adds.length; j++){
-		if(adds[j].id !== null && adds[j].id.slice(0,3) !== 'evb'){
-			par = adds[j].parentElement;
-			feed = true;
-			if( !adds[j].innerText.startsWith('S')) continue;
-			do {
-				dp = '' + par.dataset.pagelet;
-				if( dp.indexOf("FeedUnit") !== -1){ //par.id.indexOf('hyperfeed_story_id') !== -1 ||
-					// par.style = "display: none;";
-					var add_title = par.querySelector('h4');
-					if(add_title!==null){
-						let div_arr = par.querySelectorAll('div[id^=jsc_c')
-						div_arr.forEach(function(f){
-							f.style.display = "none";
-							b = document.createElement('BUTTON');
-							b.innerHTML = 'Show Post';
-							b.setAttribute('onclick', 'show_parent(this)');
-							f.parentElement.appendChild(b)});
-						adds[j].id = 'evb_add' + j;
-						count += 1;
-					}
-					feed = false;
-					
-				} else{
-					par = par.parentElement;
-				}
-			} while (feed && par !== null);
-			
-		}
-	}
-	if(count > 0) console.log('EVB Hidden Post Adds: ' + count);
-};
+  if (topLevelURLs.includes(wlHref)) {
+    window.location.href = 'https://www.facebook.com/?sk=h_chr';
+  }
 
-function switchToHrono() {
-// Change links to strip facebook tracking
-	
-	let count = 0;
-	var ahref = document.querySelectorAll('a[href*="fbclid"]');
-	// console.log('number of a links: ' + ahref.length);  
-	for(var i = 0; i < ahref.length; i++){
-		cls = ahref[i].getAttribute("class");
-		if(cls.indexOf("evb") < 0){
-			ahref[i].setAttribute("class", cls + " evb");
-			remove_listeners(ahref[i]);
-		}
-		
-		var href = ahref[i].getAttribute('href');
-		href = href.replace('https://l.facebook.com/l.php?u=','');
-		//console.log('evb sliced url: ' + href);
-		href = decodeURIComponent( href );
-		var ind = href.indexOf('fbclid');
-		if ( ind !== -1){
-			ind = ind - 1;
-			href = href.slice( 0, ind );
-			//href = href.slice( 0, href.indexOf('&fbclid') );
-			
-			//console.log('evb decoded url: ' + href);
-			ahref[i].setAttribute('href', href);
-			// console.log('evb replaced with: ' + href);
-			count +=1;
-		}
-		if( ahref[i].getAttribute('data-lynx-uri') ){
-			ahref[i].setAttribute('data-lynx-uri', href);
-		}
-	}
-	if(count > 0) console.log('EVB Converted urls: ' + count);
-	
-	sort_groups();
-	
-	hide_post_ads();
-	
-	// Hide side adds
-	adds = document.querySelectorAll('div > a[rel="nofollow"]');
-	count = 0;
-	par = null;
-	feed = null;
-	
-	for( j = 0; j < adds.length; j++){
-		if(adds[j].id !== null && adds[j].id.slice(0,3) !== 'evb'){
-			par = adds[j].parentElement;
-			feed = true;
-			do {
-				if(par.id.indexOf('pagelet_ego_pane') !== -1){
-					par.style = "display: none;";
-					adds[j].id = 'evb_add' + j;
-					count += 1;
-					feed = false;
-				} else{
-					par = par.parentElement;
-				}
-			} while (feed && par !== null);
-			
-		}
-	}
-	if(count > 0) console.log('EVB Hidden Adds: ' + count);
+  const topPostsLink = document.querySelector('div.g5gj957u > a[aria-label="Back to Top Posts"]');
+  if (topPostsLink) {
+    topPostsLink.setAttribute("href", "https://www.facebook.com/?sk=h_nor");
+    const cls = topPostsLink.getAttribute("class");
+    if (!cls.includes("scd")) {
+      topPostsLink.classList.add("scd");
+      removeListeners(topPostsLink);
+    }
+  }
 
-// Pause all videos when scrolling
-	count = 0;
-	var videos = document.querySelectorAll('video');
-	for( j = 0; j < videos.length; j++ ){
-		if (!videos[j].paused){ 
-	    	videos[j].pause(); 
-	    	count += 1;
-		}
-	}
-	if(count > 0) console.log('EVB paused watch parties: ' + count);
-};
+  sortGroups();
 
-let head = document.getElementsByTagName('head')[0];
-let sc = document.getElementById('evb_script');
-if (!sc){
-	sc = document.createElement('SCRIPT');
-	sc.setAttribute('id', 'evb_script');
-	sc.innerHTML = "function show_parent(but){ let arr = but.parentElement.querySelectorAll('div[id^=jsc_c'); arr.forEach(function(f){f.style.display = 'block'; }); but.style.display = 'none';}";
-	head.appendChild(sc);
+  count = 0;
+  const links = document.querySelectorAll(
+    'a[href^="https://www.facebook.com/?ref="], ' +
+    'a[href="https://www.facebook.com/"], ' +
+    'a[href^="/?sk="], ' +
+    'a[href="/"]'
+  );
+
+  for (let a = 0; a < links.length; a++) {
+    const link = links[a];
+    const cls = link.getAttribute("class");
+    if (!cls.includes("scd")) {
+      link.classList.add("scd");
+      removeListeners(link);
+    }
+
+    if (link.getAttribute('href') !== 'https://www.facebook.com/?sk=h_chr') {
+      link.setAttribute('href', 'https://www.facebook.com/?sk=h_chr');
+      count += 1;
+    }
+  }
+
+  if (count > 0) {
+    console.log("scd replaced noob links: " + count);
+  }
+
+  switchToHrono();
 }
 
+function hidePostAds() {
+	// by chat GPT
+  const selectors = 'a[href^="/ads/about/?"]:not([id^="scd"])';
+  const adds = Array.from(document.querySelectorAll(selectors));
+  let count = 0;
+
+  for (const add of adds) {
+    let par = add.parentElement;
+    let feed = true;
+
+    do {
+      if (par.tagName == "DIV" && par.classList.contains("x1lliihq")) {
+      	par.style.display = 'none';
+          add.id = 'scd_add' + count;
+          count += 1;
+        // }
+        feed = false;
+      } else {
+        par = par.parentElement;
+      }
+    } while (feed && par !== null);
+  }
+
+  if (count > 0) {
+    console.log('scd Hidden Post Ads: ' + count);
+  }
+}
+
+function trigger_mouseover(){
+	selectors = [];
+	selectors.push('a.oajrlxb2');
+	selectors.push('a.tes86rjd');
+	adds = document.querySelectorAll(selectors.join(','));
+	adds.forEach((x)=>{
+		let mouseoverEvent = new Event('mouseover');
+		x.dispatchEvent(mouseoverEvent);
+	});
+}
+
+function convertFacebookTrackingLinks() {
+  let count = 0;
+  const aLinks = document.querySelectorAll('a[href*="fbclid"]');
+
+  for (const link of aLinks) {
+    const cls = link.getAttribute("class");
+
+    if (cls.indexOf("scd") < 0) {
+      link.classList.add("scd");
+      removeListeners(link);
+    }
+
+    let href = link.getAttribute('href');
+    href = href.replace('https://l.facebook.com/l.php?u=', '');
+    href = decodeURIComponent(href);
+
+    const ind = href.indexOf('fbclid');
+    if (ind !== -1) {
+      href = href.slice(0, ind - 1);
+      link.setAttribute('href', href);
+      count += 1;
+    }
+
+    if (link.getAttribute('data-lynx-uri')) {
+      link.setAttribute('data-lynx-uri', href);
+    }
+  }
+
+  if (count > 0) {
+    console.log('scd Converted urls: ' + count);
+  }
+}
+
+function hideSideAds() {
+  let count = 0;
+  const adds = document.querySelectorAll('div > a[rel="nofollow"]');
+  let par = null;
+  let feed = null;
+
+  for (let j = 0; j < adds.length; j++) {
+    if (adds[j].id !== null && adds[j].id.slice(0, 3) !== 'scd') {
+      par = adds[j].parentElement;
+      feed = true;
+
+      do {
+        if (par.id.indexOf('pagelet_ego_pane') !== -1) {
+          par.style.display = "none";
+          adds[j].id = 'scd_add' + j;
+          count += 1;
+          feed = false;
+        } else {
+          par = par.parentElement;
+        }
+      } while (feed && par !== null);
+    }
+  }
+
+  if (count > 0) {
+    console.log('scd Hidden Adds: ' + count);
+  }
+}
+
+function pauseVideos() {
+  let count = 0;
+  const videos = document.querySelectorAll('video');
+
+  for (let j = 0; j < videos.length; j++) {
+    if (!videos[j].paused) {
+      videos[j].pause();
+      count += 1;
+    }
+  }
+
+  if (count > 0) {
+    console.log('scd paused watch parties: ' + count);
+  }
+}
+
+function switchToHrono() {
+  convertFacebookTrackingLinks();
+  sortGroups();
+  trigger_mouseover();
+  hidePostAds();
+  hideSideAds();
+  pauseVideos();
+}
+
+
 // Set scrolling event to the global Container
-document.getElementsByTagName("body")[0].addEventListener("wheel", redirect_plus);
-document.getElementsByTagName("body")[0].addEventListener("scroll", redirect_plus);
-document.getElementsByTagName("body")[0].addEventListener("touchmove", redirect_plus);
+document.getElementsByTagName("body")[0].addEventListener("wheel", redirectPlus);
+document.getElementsByTagName("body")[0].addEventListener("scroll", redirectPlus);
+document.getElementsByTagName("body")[0].addEventListener("touchmove", redirectPlus);
 
 // Run once, once loaded
-window.setTimeout(redirect_plus, 500);
+window.setTimeout(redirectPlus, 500);
 
