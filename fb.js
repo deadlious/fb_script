@@ -2,13 +2,13 @@ function sortGroups() {
 	// By chat GPT
   let count = 0;
   const grLinks = document.querySelectorAll('a[href^="https://www.facebook.com/groups"], a[href^="/groups/"]');
-
+  
   for (let i = 0; i < grLinks.length; i++) {
     const link = grLinks[i];
     const cls = link.getAttribute("class");
 
-    if (cls && cls.indexOf("scd") === -1) {
-      link.classList.add("scd");
+    if (cls && cls.indexOf("evb") === -1) {
+      link.classList.add("evb");
       removeListeners(link);
     }
 
@@ -23,7 +23,7 @@ function sortGroups() {
   }
 
   if (count > 0) {
-    console.log(`scd replaced group links: ${count}`);
+    console.log(`EVB replaced group links: ${count}`);
   }
 }
 
@@ -70,8 +70,8 @@ function redirectPlus() {
   if (topPostsLink) {
     topPostsLink.setAttribute("href", "https://www.facebook.com/?sk=h_nor");
     const cls = topPostsLink.getAttribute("class");
-    if (!cls.includes("scd")) {
-      topPostsLink.classList.add("scd");
+    if (!cls.includes("evb")) {
+      topPostsLink.classList.add("evb");
       removeListeners(topPostsLink);
     }
   }
@@ -89,8 +89,8 @@ function redirectPlus() {
   for (let a = 0; a < links.length; a++) {
     const link = links[a];
     const cls = link.getAttribute("class");
-    if (!cls.includes("scd")) {
-      link.classList.add("scd");
+    if (!cls.includes("evb")) {
+      link.classList.add("evb");
       removeListeners(link);
     }
 
@@ -101,7 +101,7 @@ function redirectPlus() {
   }
 
   if (count > 0) {
-    console.log("scd replaced noob links: " + count);
+    console.log("EVB replaced noob links: " + count);
   }
 
   switchToHrono();
@@ -109,7 +109,7 @@ function redirectPlus() {
 
 function hidePostAds() {
 	// by chat GPT
-  const selectors = 'a[href^="/ads/about/?"]:not([id^="scd"])';
+  const selectors = 'a[href^="/ads/about/?"]:not([id^="evb"])';
   const adds = Array.from(document.querySelectorAll(selectors));
   let count = 0;
 
@@ -120,7 +120,7 @@ function hidePostAds() {
     do {
       if (par.tagName == "DIV" && par.classList.contains("x1lliihq")) {
       	par.style.display = 'none';
-          add.id = 'scd_add' + count;
+          add.id = 'evb_add' + count;
           count += 1;
         // }
         feed = false;
@@ -131,7 +131,7 @@ function hidePostAds() {
   }
 
   if (count > 0) {
-    console.log('scd Hidden Post Ads: ' + count);
+    console.log('EVB Hidden Post Ads: ' + count);
   }
 }
 
@@ -146,36 +146,37 @@ function trigger_mouseover(){
 	});
 }
 
+
 function convertFacebookTrackingLinks() {
   let count = 0;
   const aLinks = document.querySelectorAll('a[href*="fbclid"]');
-
+  
   for (const link of aLinks) {
     const cls = link.getAttribute("class");
-
-    if (cls.indexOf("scd") < 0) {
-      link.classList.add("scd");
+    
+    if (cls.indexOf("evb") < 0) {
+      link.classList.add("evb");
       removeListeners(link);
     }
-
+    
     let href = link.getAttribute('href');
     href = href.replace('https://l.facebook.com/l.php?u=', '');
     href = decodeURIComponent(href);
-
+    
     const ind = href.indexOf('fbclid');
     if (ind !== -1) {
       href = href.slice(0, ind - 1);
       link.setAttribute('href', href);
       count += 1;
     }
-
+    
     if (link.getAttribute('data-lynx-uri')) {
       link.setAttribute('data-lynx-uri', href);
     }
   }
-
+  
   if (count > 0) {
-    console.log('scd Converted urls: ' + count);
+    console.log('EVB Converted urls: ' + count);
   }
 }
 
@@ -184,16 +185,16 @@ function hideSideAds() {
   const adds = document.querySelectorAll('div > a[rel="nofollow"]');
   let par = null;
   let feed = null;
-
+  
   for (let j = 0; j < adds.length; j++) {
-    if (adds[j].id !== null && adds[j].id.slice(0, 3) !== 'scd') {
+    if (adds[j].id !== null && adds[j].id.slice(0, 3) !== 'evb') {
       par = adds[j].parentElement;
       feed = true;
-
+      
       do {
         if (par.id.indexOf('pagelet_ego_pane') !== -1) {
           par.style.display = "none";
-          adds[j].id = 'scd_add' + j;
+          adds[j].id = 'evb_add' + j;
           count += 1;
           feed = false;
         } else {
@@ -202,25 +203,25 @@ function hideSideAds() {
       } while (feed && par !== null);
     }
   }
-
+  
   if (count > 0) {
-    console.log('scd Hidden Adds: ' + count);
+    console.log('EVB Hidden Adds: ' + count);
   }
 }
 
 function pauseVideos() {
   let count = 0;
   const videos = document.querySelectorAll('video');
-
+  
   for (let j = 0; j < videos.length; j++) {
     if (!videos[j].paused) {
       videos[j].pause();
       count += 1;
     }
   }
-
+  
   if (count > 0) {
-    console.log('scd paused watch parties: ' + count);
+    console.log('EVB paused watch parties: ' + count);
   }
 }
 
@@ -231,6 +232,7 @@ function switchToHrono() {
   hidePostAds();
   hideSideAds();
   pauseVideos();
+  document.querySelectorAll('div.x9f619[role="navigation"]')[0].style.display = "none";
 }
 
 
